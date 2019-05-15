@@ -1,53 +1,67 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, KeyboardAvoidingView } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
+
+import firebase from "./firebase";
+
+const Container = Platform.select({
+  android: KeyboardAvoidingView,
+  ios: View,
+});
 
 export default class App extends React.Component {
-
   state = {
-    message: '',
-    conversation: [{
-      key: 1,
-      user: 1,
-      name: "Quynh",
-      message: "Hello"
-    }, {
-      key: 2,
-      user: 2,
-      name: "Nguyen",
-      message: "Hi"
-    }]
+    messages: [],
+  };
+
+  componentDidMount() {
+    firebase
+      .database()
+      .ref("conversation")
+      .on("child_added", snapshot => {
+        const message = snapshot.val();
+        this.setState(previousState => ({
+          messages: GiftedChat.append(previousState.messages, [message]),
+        }));
+      });
   }
 
-  sendMessage = () => {
-    const { message } = this.state;
-    this.setState({
-      conversation: [
-        ...this.state.conversation,
-        {
-          key: Math.random().toString(),
-          user: 1,
-          name: "Quynh",
-          message
-        }
-      ],
-      message: ''
-    })
+  onSend(messages = []) {
+    // this.setState(previousState => ({
+    //   messages: GiftedChat.append(previousState.messages, messages),
+    // }));
+    const message = messages[0];
+    message.user._id = Platform.select({
+      android: 2,
+      ios: 1,
+    });
+    firebase
+      .database()
+      .ref("conversation")
+      .push(message);
   }
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <FlatList
-          data={this.state.conversation}
-          renderItem={({ item }) => <Text>{item.name}: {item.message}</Text>}
+      <Container style={{ flex: 1 }} behavior="padding" enabled>
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={messages => this.onSend(messages)}
+          user={{
+            _id: 1,
+            name: "Nguyen",
+            avatar: "https://placeimg.com/140/140/any",
+          }}
         />
-        <TextInput 
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={(message) => this.setState({ message })}
-          value={this.state.message} 
-          onSubmitEditing={this.sendMessage}
-        />
-      </KeyboardAvoidingView>
+      </Container>
     );
   }
 }
@@ -55,7 +69,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: '10%'
+    backgroundColor: "#fff",
+    paddingTop: "10%",
   },
 });
