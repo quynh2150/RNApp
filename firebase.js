@@ -8,4 +8,4 @@ const firebaseConfig = {
   storageBucket: "<YOUR-STORAGE-BUCKET>"
 };
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig); 
