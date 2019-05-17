@@ -1,16 +1,11 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  FlatList,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
-
-import firebase from "./firebase";
+// import Login from "./src/login/login"
 
 const Container = Platform.select({
   android: KeyboardAvoidingView,
@@ -18,49 +13,10 @@ const Container = Platform.select({
 });
 
 export default class App extends React.Component {
-  state = {
-    messages: [],
-  };
-
-  componentDidMount() {
-    firebase
-      .database()
-      .ref("conversation")
-      .on("child_added", snapshot => {
-        const message = snapshot.val();
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, [message]),
-        }));
-      });
-  }
-
-  onSend(messages = []) {
-    // this.setState(previousState => ({
-    //   messages: GiftedChat.append(previousState.messages, messages),
-    // }));
-    const message = messages[0];
-    message.user._id = Platform.select({
-      android: 2,
-      ios: 1,
-    });
-    firebase
-      .database()
-      .ref("conversation")
-      .push(message);
-  }
-
   render() {
     return (
-      <Container style={{ flex: 1 }} behavior="padding" enabled>
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={messages => this.onSend(messages)}
-          user={{
-            _id: 1,
-            name: "Nguyen",
-            avatar: "https://placeimg.com/140/140/any",
-          }}
-        />
+      <Container style={styles} behavior="padding" enabled>
+        <ChatRoom />
       </Container>
     );
   }
