@@ -1,53 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, KeyboardAvoidingView } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+// import Login from "./src/login/login"
+
+const Container = Platform.select({
+  android: KeyboardAvoidingView,
+  ios: View,
+});
 
 export default class App extends React.Component {
-
-  state = {
-    message: '',
-    conversation: [{
-      key: 1,
-      user: 1,
-      name: "Quynh",
-      message: "Hello"
-    }, {
-      key: 2,
-      user: 2,
-      name: "Nguyen",
-      message: "Hi"
-    }]
-  }
-
-  sendMessage = () => {
-    const { message } = this.state;
-    this.setState({
-      conversation: [
-        ...this.state.conversation,
-        {
-          key: Math.random().toString(),
-          user: 1,
-          name: "Quynh",
-          message
-        }
-      ],
-      message: ''
-    })
-  }
-
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <FlatList
-          data={this.state.conversation}
-          renderItem={({ item }) => <Text>{item.name}: {item.message}</Text>}
-        />
-        <TextInput 
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={(message) => this.setState({ message })}
-          value={this.state.message} 
-          onSubmitEditing={this.sendMessage}
-        />
-      </KeyboardAvoidingView>
+      <Container style={styles} behavior="padding" enabled>
+        <ChatRoom />
+      </Container>
     );
   }
 }
@@ -55,7 +25,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: '10%'
+    backgroundColor: "#fff",
+    paddingTop: "10%",
   },
 });

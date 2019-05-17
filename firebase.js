@@ -1,11 +1,14 @@
-import * as firebase from 'firebase';
+import * as firebase from "firebase";
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "<YOUR-API-KEY>",
-  authDomain: "<YOUR-AUTH-DOMAIN>",
-  databaseURL: "<YOUR-DATABASE-URL>",
-  storageBucket: "<YOUR-STORAGE-BUCKET>"
+  databaseURL: "https://gfg-demo.firebaseio.com/",
 };
 
+<<<<<<< HEAD
 firebase.initializeApp(firebaseConfig); 
+=======
+firebase.initializeApp(firebaseConfig);
+
+export default firebase;
+>>>>>>> example
