@@ -1,6 +1,15 @@
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Login from '../login';
+import ChatRoom from '../chat-room';
 
-export const AppScreens = new StackNavigator({
-  Login: { screen: Login },
-});
+const RootStack = createStackNavigator(
+  {
+    Login: Login,
+    Chat: ChatRoom
+  },
+  {
+    initialRouteName: "Login"
+  }
+);
+
+export const AppContainer = createAppContainer(RootStack);

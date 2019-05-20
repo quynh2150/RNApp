@@ -1,31 +1,20 @@
-import React from "react";
-import {
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-// import Login from "./src/login/login"
+import React from 'react';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
+import AppContainer from './src/utils/navigator.util';
 
 const Container = Platform.select({
   android: KeyboardAvoidingView,
   ios: View,
 });
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
-      <Container style={styles} behavior="padding" enabled>
-        <ChatRoom />
+      <Container behavior="padding" >
+        <AppContainer />
       </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: "10%",
-  },
-});
+export default App;

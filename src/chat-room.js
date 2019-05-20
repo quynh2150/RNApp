@@ -1,12 +1,29 @@
 import React from "react";
-import { StyleSheet, Platform } from "react-native";
+import { Platform } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-
-import firebase from "./firebase";
+import { AsyncStorage } from 'react-native';
+import firebase from "../firebase";
 
 class ChatRoom extends React.Component {
-  state = {
-    messages: [],
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      messages: [],
+      user: {}
+    };
+
+    this._retrieveData();
+  }
+
+  _retrieveData = async () => {
+    try {
+      let value = await AsyncStorage.getItem('UserInfo');
+      this.setState({ user: JSON.parse(value) });
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   componentDidMount() {
@@ -22,9 +39,6 @@ class ChatRoom extends React.Component {
   }
 
   onSend(messages = []) {
-    // this.setState(previousState => ({
-    //   messages: GiftedChat.append(previousState.messages, messages),
-    // }));
     const message = messages[0];
     message.user._id = Platform.select({
       android: 2,
@@ -41,20 +55,10 @@ class ChatRoom extends React.Component {
       <GiftedChat
         messages={this.state.messages}
         onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1,
-          name: "Nguyen",
-          avatar: "https://placeimg.com/140/140/any",
-        }}
+        user={this.state.user}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  main: {
-  },
-});
-
 
 export default ChatRoom;
